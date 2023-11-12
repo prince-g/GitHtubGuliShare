@@ -1,0 +1,82 @@
+server:
+  port: 8506
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
+feign:
+  sentinel:
+    enabled: true
+spring:
+  main:
+    allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+    openfeign:
+      lazy-attributes-resolution: true
+      client:
+        config:
+          default:
+            connectTimeout: 30000
+            readTimeout: 30000
+            loggerLevel: basic
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 1800000
+      password:
+      jedis:
+        pool:
+          max-active: 20 #最大连接数
+          max-wait: -1    #最大阻塞等待时间(负数表示没限制)
+          max-idle: 5    #最大空闲
+          min-idle: 0     #最小空闲
+  kafka:
+    bootstrap-servers: 39.98.123.211:9092
+    producer:
+      retries: 3  #设置大于0的值，则客户端会将发送失败的记录重新发送
+      acks: 1
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: service-payment
+      enable-auto-commit: true
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://139.198.104.58:3306/tingshu_payment?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true
+    username: root
+    password: shangguigu@QY123
+    hikari:
+      connection-test-query: SELECT 1
+      connection-timeout: 60000
+      idle-timeout: 500000
+      max-lifetime: 540000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: GuliHikariPool
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+wechat:
+  v3pay:
+    #小程序微信公众平台appId
+    appid: wxcc651fcbab275e33
+    #商户号
+    merchantId: 1631833859
+    #商户API私钥路径
+    privateKeyPath: /root/tingshu/apiclient_key.pem
+    #商户证书序列号
+    merchantSerialNumber: 4AE80B52EBEAB2B96F68E02510A42801E952E889
+    #商户APIV3密钥
+    apiV3key: 84dba6dd51cdaf779e55bcabae564b53
+    #异步回调地址
+    notifyUrl: http://139.198.163.91:8500/api/payment/wxPay/notify
